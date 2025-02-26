@@ -1,24 +1,71 @@
 from tkinter import *
 
 def button_prees(num):
-    pass
+    
+    global equation_text
+
+    if equation_text and equation_text[-1] in ['+', '-', '*', '/'] and num in ['+', '-', '*', '/']:
+        return
+
+    equation_text = equation_text + str(num)
+
+    equation_label.set(equation_text)
 
 
 def equals():
-    pass
+    global equation_text
 
+    try:
+
+        total = str(eval(equation_text))
+
+        equation_label.set(total)
+
+        equation_text =total
+
+    except ZeroDivisionError:
+
+        equation_label.set("error")
+
+        equation_text = ""
+
+    except SyntaxError:
+
+        equation_label.set("syntax error")
+
+        equation_text = ""
+
+def percent():
+    global equation_text
+    try:
+        equation_text = str(eval(equation_text) / 100)
+        equation_label.set(equation_text)
+    except:
+        equation_label.set("error")
+        equation_text = ""
+
+def backspace():
+    global equation_text
+    equation_text = equation_text[:-1]  # Remove last character
+    equation_label.set(equation_text)
+    
 
 def clear():
-    pass
+    global equation_text 
+
+    equation_label.set("")
+
+    equation_text = ""
 
 Window = Tk() #use for graphical user inter face
 Window.title = "Calculator"
 Window.geometry("500x500")
 
+equation_text = ""
 
-equation_levet = StringVar()
+equation_label = StringVar()
 
-label = Label(Window, textvariable=equation_levet,font=('consolas',20),bg="white",width=24,height=2)
+label = Label(Window, textvariable=equation_label,font=('consolas',20),bg="white",width=24,height=2)
 label.pack()
 
 frame = Frame(Window)
@@ -61,13 +108,13 @@ button9 = Button(frame,text=9,height=4,width=9,font=35,
                 command=lambda:button_prees(9))
 button9.grid(row=2,column=2)
 
-button0 = Button(frame,text=0,height=4,width=9,font=35,
-                command=lambda:button_prees(9))
-button0.grid(row=3,column=0)
-
-decimal = Button(frame,text='.',height=4,width=9,font=35,
+decimal = Button(frame,text='•',height=4,width=9,font=35,
                 command=lambda:button_prees('.'))
-decimal.grid(row=3,column=1)
+decimal.grid(row=3,column=0)
+
+button0 = Button(frame,text=0,height=4,width=9,font=35,
+                command=lambda:button_prees(0))
+button0.grid(row=3,column=1)
 
 equal = Button(frame,text='=',height=4,width=9,font=35,
                 command=equals)
@@ -77,17 +124,28 @@ plus = Button(frame,text='+',height=4,width=9,font=35,
             command=lambda:button_prees('+'))
 plus.grid(row=0,column=4)
 
-minus = Button(frame,text='-',height=4,width=9,font=35,
+minus = Button(frame,text='–',height=4,width=9,font=35,
             command=lambda:button_prees('-'))
 minus.grid(row=1,column=4)
 
-multiply = Button(frame,text='*',height=4,width=9,font=35,
+multiply = Button(frame,text='×',height=4,width=9,font=35,
             command=lambda:button_prees('*'))
 multiply.grid(row=2,column=4)
 
-divide = Button(frame,text='/',height=4,width=9,font=35,
+divide = Button(frame,text='÷',height=4,width=9,font=35,
             command=lambda:button_prees('/'))
 divide.grid(row=3,column=4)
+
+clears = Button(frame,text='C',height=4,width=19,font=35,
+                command=lambda:clear())
+clears.grid(row=4, column=2, columnspan=3)
+
+cancel_button = Button(frame, text='⌫', height=4, width=9, font=35, command=backspace)
+cancel_button.grid(row=4, column=0)
+
+percent_button = Button(frame, text='%', height=4, width=9, font=35, command=percent)
+percent_button.grid(row=4, column=1)
+
 
 
 
